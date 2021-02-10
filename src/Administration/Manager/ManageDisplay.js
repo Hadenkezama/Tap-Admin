@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 const ManageDisplay = ({
@@ -9,52 +9,64 @@ const ManageDisplay = ({
   price,
   amount,
   num_in_stock,
-  catagorie,
-  wine_colour_id,
-  wine_region_id,
+  catagorie_id,
+  wine_colour,
+  wine_region,
 }) => {
-  const [catagorieName, setCatagorieName] = useState('')
-  const [wineRegion, setWineRegion] = useState('')
-  const [wineColour, setWineColour] = useState('')
+  const [catagorieName, setCatagorieName] = useState()
+  const [wineRegion, setWineRegion] = useState()
+  const [wineColour, setWineColour] = useState()
 
-  const catagorieFetch = async () => {
-    const catName = await fetch(
-      `http://localhost:9000/catagories/${drink}/${catagorie}`,
-    )
-      .then((response) => response.json())
-      .then(([{ catagorie }]) => catagorie)
-    setCatagorieName(catName)
-  }
+  useEffect(() => {
+    const catagorieFetch = async () => {
+      console.log('Manage Display')
+      const catName = await fetch(
+        `http://localhost:9000/catagories/${drink}/${catagorie_id}`,
+      )
+        .then((response) => response.json())
+        .then(([{ catagorie }]) => catagorie)
+      setCatagorieName(catName)
+    }
 
-  const wineRegionFetch = async () => {
-    const regionName = await fetch(
-      `http://localhost:9000/catagories/wine_region/${wine_region_id}`,
-    )
-      .then((response) => response.json())
-      .then(([{ catagorie }]) => catagorie)
-    setWineRegion(regionName)
-  }
+    const wineRegionFetch = async () => {
+      const regionName = await fetch(
+        `http://localhost:9000/catagories/wine_region/${wine_region}`,
+      )
+        .then((response) => response.json())
+        .then(([{ catagorie }]) => catagorie)
+      setWineRegion(regionName)
+    }
 
-  const wineColourFetch = async () => {
-    const regionName = await fetch(
-      `http://localhost:9000/catagories/wine_colour/${wine_colour_id}`,
-    )
-      .then((response) => response.json())
-      .then(([{ catagorie }]) => catagorie)
-    setWineColour(regionName)
-  }
+    const wineColourFetch = async () => {
+      const regionName = await fetch(
+        `http://localhost:9000/catagories/wine_colour/${wine_colour}`,
+      )
+        .then((response) => response.json())
+        .then(([{ catagorie }]) => catagorie)
+      setWineColour(regionName)
+    }
 
-  if (catagorie) {
-    catagorieFetch()
-  }
+    if (catagorie_id) {
+      catagorieFetch()
+    }
 
-  if (wine_colour_id) {
-    wineColourFetch()
-  }
+    if (wine_colour) {
+      wineColourFetch()
+    }
 
-  if (wine_region_id) {
-    wineRegionFetch()
-  }
+    if (wine_region) {
+      wineRegionFetch()
+    }
+  }, [
+    drink,
+    img,
+    catagorie_id,
+    price,
+    amount,
+    num_in_stock,
+    wine_colour,
+    wine_region,
+  ])
 
   return (
     <div className="manage-display-container">
@@ -64,9 +76,9 @@ const ManageDisplay = ({
       <h3>Price: ${price}</h3>
       <h3>Quantity: {amount}</h3>
       <h3>In Stock: {num_in_stock}</h3>
-      {catagorie ? <h3>Catagorie: {catagorieName}</h3> : ''}
-      {wine_colour_id ? <h3>Colour: {wineColour}</h3> : ''}
-      {wine_region_id ? <h3>Region: {wineRegion}</h3> : ''}
+      {catagorie_id && <h3>Catagorie: {catagorieName}</h3>}
+      {wine_colour && <h3>Colour: {wineColour}</h3>}
+      {wine_region && <h3>Region: {wineRegion}</h3>}
       <Link to={{ pathname: `/updatedrink/${id}`, state: { drink: drink } }}>
         Update drink
       </Link>
