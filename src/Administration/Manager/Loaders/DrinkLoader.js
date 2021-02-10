@@ -15,33 +15,14 @@ const DrinkLoader = ({ match }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          const name = data.map(
-            ({
-              id,
-              img,
-              name,
-              amount,
-              price,
-              num_in_stock,
-              catagorie_id,
-              wine_region_id,
-              wine_colour_id,
-            }) => (
-              <ManageDisplay
-                drink={match.params.drink}
-                id={id}
-                img={img}
-                name={name}
-                amount={amount}
-                price={price}
-                num_in_stock={num_in_stock}
-                catagorie={catagorie_id}
-                wine_colour_id={wine_colour_id}
-                wine_region_id={wine_region_id}
-                key={name + amount}
-              />
-            ),
-          )
+          const name = data.map((item) => (
+            <ManageDisplay
+              {...item}
+              key={item.name + item.amount}
+              drink={match.params.drink}
+            />
+          ))
+
           setDrinks(name)
         })
     } catch (err) {
